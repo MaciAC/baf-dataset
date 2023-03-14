@@ -8,6 +8,7 @@ import argparse
 import pprint
 import pandas as pd
 import intervaltree as itree
+import json
 
 
 def create_tree(groundtruths, results, threshold=None):
@@ -291,7 +292,15 @@ if __name__ == "__main__":
         "num": len(gts),
         "seconds": sum([gt.query_end - gt.query_start for _, gt in gts.iterrows()]),
     }
+    pprint.pprint(stats)
 
     # COMPUTE STATISTICS
     stats.update(compute_statistics(res, gts, args.threshold))
     pprint.pprint(stats)
+
+    # Serializing json  
+    with open("matches/results.json", "w") as write_file:
+        json.dump(stats, write_file, indent=4)
+    json_object = json.dumps(stats, indent = 4)
+    print(json_object)
+
